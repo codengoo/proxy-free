@@ -112,7 +112,7 @@ describe('ProxyScrapeClient', () => {
         await expect(client.getProxyList()).rejects.toBeInstanceOf(ProxyScrapeError)
     })
 
-    it('returns a deterministic proxy within the top 10 when using getBestRandom', async () => {
+    it('returns ranked alive proxies limited by the requested count when using getBestRandom', async () => {
         const proxies = Array.from({ length: 12 }, (_, index) => ({
             ...sampleProxy,
             ip: `10.0.0.${index + 1}`,
@@ -130,16 +130,21 @@ describe('ProxyScrapeClient', () => {
             },
         })
 
-        const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0.35)
+        const ranked = await client.getBestRandom({}, 5)
 
-        const selected = await client.getBestRandom()
-        randomSpy.mockRestore()
-
-        expect(selected?.ip).toBe('10.0.0.9')
+        expect(ranked).toHaveLength(5)
+        expect(ranked.every((proxy) => proxy.alive)).toBe(true)
+        expect(ranked.map((proxy) => proxy.ip)).toEqual([
+            '10.0.0.12',
+            '10.0.0.11',
+            '10.0.0.10',
+            '10.0.0.9',
+            '10.0.0.8',
+        ])
     })
 
     it('checkProxy validates the upstream IP via api.ipify.org', async () => {
-        axiosDirectGetMock.mockResolvedValueOnce({ data: { ip: sampleProxy.ip } })
+        axiosDirectGetMock.mockResolvedValueOnce({ data: sampleProxy.ip })
 
         const result = await ProxyScrapeClient.checkProxy(sampleProxy)
 
@@ -152,7 +157,7 @@ describe('ProxyScrapeClient', () => {
             protocol: sampleProxy.protocol,
         })
 
-        axiosDirectGetMock.mockResolvedValueOnce({ data: { ip: '203.0.113.1' } })
+        axiosDirectGetMock.mockResolvedValueOnce({ data: '203.0.113.1' })
         const mismatch = await ProxyScrapeClient.checkProxy(sampleProxy)
         expect(mismatch).toBe(false)
     })

@@ -11,19 +11,19 @@ npm install proxy-free
 ## Quick start
 
 ```ts
-import { fetchProxyList } from 'proxy-free'
+import { fetchProxyList } from "proxy-free";
 
 const { proxies } = await fetchProxyList({
   query: {
-    protocol: ['http', 'https'],
-    country: ['US', 'DE'],
-    anonymity: 'elite',
+    protocol: ["http", "https"],
+    country: ["US", "DE"],
+    anonymity: "elite",
     limit: 50,
   },
-})
+});
 
-console.log(`Received ${proxies.length} proxies`)
-console.log(`First proxy endpoint: ${proxies[0]?.proxy}`)
+console.log(`Received ${proxies.length} proxies`);
+console.log(`First proxy endpoint: ${proxies[0]?.proxy}`);
 ```
 
 ## Advanced usage
@@ -31,22 +31,22 @@ console.log(`First proxy endpoint: ${proxies[0]?.proxy}`)
 Create a reusable client if you need to tweak timeouts, base URLs, or other Axios options:
 
 ```ts
-import { ProxyScrapeClient } from 'proxy-free'
+import { ProxyScrapeClient } from "proxy-free";
 
 const client = new ProxyScrapeClient({
   timeoutMs: 5_000,
-})
+});
 
 const data = await client.fetchProxyList({
   params: {
     // You can add vendor-specific parameters not covered by the helper type
-    user_identifier: 'demo-app',
+    user_identifier: "demo-app",
   },
   query: {
     ssl: true,
     limit: 100,
   },
-})
+});
 ```
 
 ### Query helpers
@@ -67,25 +67,9 @@ Anything else can be appended through the `params` option or by providing your o
 The library exports strong types for the entire JSON payload, so you can rely on autocomplete when inspecting proxy metadata:
 
 ```ts
-import type { ProxyRecord } from 'proxy-free'
+import type { ProxyRecord } from "proxy-free";
 
 function formatProxy(proxy: ProxyRecord) {
-  return `${proxy.protocol}://${proxy.ip}:${proxy.port} - ${proxy.ip_data.country}`
+  return `${proxy.protocol}://${proxy.ip}:${proxy.port} - ${proxy.ip_data.country}`;
 }
 ```
-
-## Building
-
-```bash
-npm run build
-```
-
-This runs `tsdown`, producing dual ESM/CJS bundles and `.d.mts/.d.cts` declaration files under `dist/`.
-
-## Testing
-
-```bash
-npm run test
-```
-
-Vitest runs completely offline thanks to the mocked Axios layer inside the test suite, so CI does not depend on the live ProxyScrape service.

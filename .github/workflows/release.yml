@@ -6,14 +6,6 @@ on:
       - "v*"
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    steps:
-      - name: Echo "secret"
-        run: echo "${{ secrets.NPM_TOKEN }}"
-
   build-publish:
     uses: codengoo/ts-library-action/.github/workflows/deploy.yml@main
     secrets: inherit

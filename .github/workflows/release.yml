@@ -1,0 +1,13 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build-publish:
+    uses: codengoo/ts-library-action/.github/workflows/deploy.yml@main
+    secrets: inherit
+    with:
+      publish: true

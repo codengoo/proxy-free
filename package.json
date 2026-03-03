@@ -1,5 +1,5 @@
 {
-  "name": "proxy-free",
+  "name": "@nghiavuive/proxy-free",
   "version": "0.1.0",
   "description": "TypeScript client for ProxyScrape free proxy list API",
   "type": "module",
@@ -16,6 +16,9 @@
   "files": [
     "dist"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "sideEffects": false,
   "scripts": {
     "build": "tsdown",

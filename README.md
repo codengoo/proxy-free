@@ -5,7 +5,7 @@ TypeScript client for the ProxyScrape free proxy list API. It wraps the document
 ## Installation
 
 ```bash
-npm install proxy-free
+npm install @nghiavuive/proxy-free
 ```
 
 ## Quick start
